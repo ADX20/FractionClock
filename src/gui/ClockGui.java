@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.EventQueue;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
@@ -14,16 +15,15 @@ import javax.swing.Timer;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JRadioButton;
 
 public class ClockGui implements ActionListener {
 
 	
 	private JFrame frame;
 	
-	private static int HourNum;
-	private static int HourDom;
-	private static int MinuteNum;
-	private static int MinuteDom;
+	
+	private static int[] time;
 	private static boolean colon = false;
 	
 	private static JLabel HourNumeratorLabel;
@@ -37,6 +37,9 @@ public class ClockGui implements ActionListener {
 	private static ClockGui window;
 	
 	static FractionClock clock = new FractionClock();
+	private static JRadioButton EasyRadioButton;
+	private static JRadioButton HardRadioButton;
+	private ButtonGroup BtnGrp;
 
 	
 	/**
@@ -70,12 +73,13 @@ public class ClockGui implements ActionListener {
 	 * Initialize the contents of the frame.
 	 */
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("Second passed");
+			//System.out.println("Second passed");
 			displayClock();
 		}
 	private void initialize() {
 		
-		frame = new JFrame();
+		frame = new JFrame("FractionClock");
+		BtnGrp = new ButtonGroup();
 		
 
 		
@@ -117,20 +121,40 @@ public class ClockGui implements ActionListener {
 		MinuteDominatorLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 33));
 		frame.getContentPane().add(MinuteDominatorLabel, "cell 4 4,alignx center,aligny top");
 		
+		EasyRadioButton = new JRadioButton("Easy");
+		frame.getContentPane().add(EasyRadioButton, "cell 0 8");
+		BtnGrp.add(EasyRadioButton);
+		
+		HardRadioButton = new JRadioButton("Hard");
+		frame.getContentPane().add(HardRadioButton, "cell 1 8");
+		
+		BtnGrp.add(HardRadioButton);
+		BtnGrp.add(EasyRadioButton);
 	}
 	
 	private static void displayClock() {
-		
-			HourNum = clock.getHour()[0];
-			HourDom = clock.getHour()[1];
-			MinuteNum = clock.getMinute()[0];
-			MinuteDom = clock.getMinute()[1];
 			
-			HourNumeratorLabel.setText(Integer.toString(HourNum));
-			HourDominatorLabel.setText(Integer.toString(HourDom));
 			
-			MinuteNumeratorLabel.setText(Integer.toString(MinuteNum));
-			MinuteDominatorLabel.setText(Integer.toString(MinuteDom));
+			
+			
+			if(HardRadioButton.isSelected()) {
+				
+				time = clock.getRandomized(500);
+				HourNumeratorLabel.setText(Integer.toString(time[0]));
+				HourDominatorLabel.setText(Integer.toString(time[1]));
+				
+				MinuteNumeratorLabel.setText(Integer.toString(time[2]));
+				MinuteDominatorLabel.setText(Integer.toString(time[3]));
+				
+			}
+			if(EasyRadioButton.isSelected()) {
+				HourNumeratorLabel.setText(Integer.toString(clock.getHour()[0]));
+				HourDominatorLabel.setText(Integer.toString(clock.getHour()[1]));
+				MinuteNumeratorLabel.setText(Integer.toString(clock.getMinute()[0]));
+				MinuteDominatorLabel.setText(Integer.toString(clock.getMinute()[1]));
+			
+			}
+			
 			if(colon == true) {
 				SecondIndicator.setText(":");
 				

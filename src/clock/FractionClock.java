@@ -1,17 +1,41 @@
 package clock;
 
 import java.time.LocalTime;
+import java.util.Random;
 
 public class FractionClock {
-
-	private static LocalTime time;
 	
+	private static LocalTime time;
+	private static int old_minute;
+	private static int old_hour;
+	private static int min_rand;
+	private static int hour_rand;
+	Random random;
+	
+	public static int[] getRandomized(int complexity) {
+		Random random = new Random();
+		time = LocalTime.now();
+		
+		if(time.getMinute() != old_minute) {
+			min_rand = random.nextInt(complexity);
+			while(min_rand <= 0) min_rand = random.nextInt(complexity);
+		}
+		
+		if(time.getHour() != old_hour) {
+			hour_rand = random.nextInt(complexity);
+			while(hour_rand <= 0) hour_rand = random.nextInt(complexity);
+		}
+		
+		old_hour = time.getHour();
+		old_minute = time.getMinute();
+
+		return new int[] {CalculateHours(time.getHour())[0] * hour_rand, CalculateHours(time.getHour())[1] * hour_rand, CalculateMinutes(time.getMinute())[0] * min_rand,CalculateMinutes(time.getMinute())[1] * min_rand};		
+	}
 	
 	public static int[] getHour() {
 		time = LocalTime.now();
 		return new int[] {CalculateHours(time.getHour())[0],CalculateHours(time.getHour())[1]};
 	}
-	
 	public static int[] getMinute() {
 		time = LocalTime.now();
 		return new int[] {CalculateMinutes(time.getMinute())[0],CalculateMinutes(time.getMinute())[1]};
