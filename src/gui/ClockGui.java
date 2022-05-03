@@ -16,6 +16,13 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
+import javax.swing.JSlider;
+import javax.swing.JSeparator;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.JLayeredPane;
+import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
 
 public class ClockGui implements ActionListener {
 
@@ -40,6 +47,9 @@ public class ClockGui implements ActionListener {
 	private static JRadioButton EasyRadioButton;
 	private static JRadioButton HardRadioButton;
 	private ButtonGroup BtnGrp;
+	private JLabel lblNewLabel_1;
+	private JPanel panel;
+	private static JSlider slider;
 
 	
 	/**
@@ -84,16 +94,18 @@ public class ClockGui implements ActionListener {
 
 		
 		frame.setBounds(100, 100, 450, 300);
+		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new MigLayout("", "[16.6%][16.6%][16.6%][][16.6%][16.6%][16.6%]", "[10%][10%][10%:10%:10%][7.5%:7.5%:7.5%][10%:10%:10%][][15%][10%][10%][]"));
+		frame.getContentPane().setLayout(new MigLayout("", "[16.6%,grow][16.6%][16.6%][][16.6%,grow][16.6%][16.6%,grow]", "[10%][10%][10%:10%:10%][7.5%:7.5%:7.5%][10%:10%:10%][][15%,grow][10%][10%,grow][grow]"));
 		
 		HourNumeratorLabel = new JLabel("");
-		HourNumeratorLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		HourNumeratorLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		HourNumeratorLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 		HourNumeratorLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 33));
 		frame.getContentPane().add(HourNumeratorLabel, "cell 2 2,alignx center,aligny bottom");
 		
 		MinuteNumeratorLabel = new JLabel("");
+		MinuteNumeratorLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		MinuteNumeratorLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 33));
 		frame.getContentPane().add(MinuteNumeratorLabel, "cell 4 2,alignx center,aligny bottom");
 		
@@ -113,23 +125,42 @@ public class ClockGui implements ActionListener {
 		HourDominatorLabel = new JLabel("");
 		HourDominatorLabel.setBackground(Color.WHITE);
 		HourDominatorLabel.setVerticalAlignment(SwingConstants.TOP);
-		HourDominatorLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		HourDominatorLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		HourDominatorLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 33));
 		frame.getContentPane().add(HourDominatorLabel, "cell 2 4,alignx center,aligny top");
 		
 		MinuteDominatorLabel = new JLabel("");
+		MinuteDominatorLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		MinuteDominatorLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 33));
 		frame.getContentPane().add(MinuteDominatorLabel, "cell 4 4,alignx center,aligny top");
 		
+		panel = new JPanel();
+		frame.getContentPane().add(panel, "cell 0 5 7 4,grow");
+		panel.setLayout(new MigLayout("", "[49px][]", "[25px][][][]"));
+		
 		EasyRadioButton = new JRadioButton("Easy");
-		frame.getContentPane().add(EasyRadioButton, "cell 0 8");
+		EasyRadioButton.setSelected(true);
+		panel.add(EasyRadioButton, "cell 0 2,alignx left,aligny top");
+		BtnGrp.add(EasyRadioButton);
 		BtnGrp.add(EasyRadioButton);
 		
 		HardRadioButton = new JRadioButton("Hard");
-		frame.getContentPane().add(HardRadioButton, "cell 1 8");
+		panel.add(HardRadioButton, "cell 1 2");
 		
 		BtnGrp.add(HardRadioButton);
-		BtnGrp.add(EasyRadioButton);
+		
+		lblNewLabel_1 = new JLabel("<html>complexity<br>(only hard):</html>");
+		panel.add(lblNewLabel_1, "flowx,cell 0 3 2 1");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		slider = new JSlider();
+		slider.setValue(500);
+		slider.setMaximum(999);
+		slider.setPaintLabels(true);
+		slider.setPaintTicks(true);
+		slider.setMinorTickSpacing(100);
+		slider.setMinimum(11);
+		panel.add(slider, "cell 0 3 2 1");
 	}
 	
 	private static void displayClock() {
@@ -139,13 +170,14 @@ public class ClockGui implements ActionListener {
 			
 			if(HardRadioButton.isSelected()) {
 				
-				time = clock.getRandomized(500);
+				time = clock.getRandomized(slider.getMinimum(),slider.getValue());
 				HourNumeratorLabel.setText(Integer.toString(time[0]));
 				HourDominatorLabel.setText(Integer.toString(time[1]));
 				
 				MinuteNumeratorLabel.setText(Integer.toString(time[2]));
 				MinuteDominatorLabel.setText(Integer.toString(time[3]));
 				
+				System.out.println(slider.getValue());
 			}
 			if(EasyRadioButton.isSelected()) {
 				HourNumeratorLabel.setText(Integer.toString(clock.getHour()[0]));

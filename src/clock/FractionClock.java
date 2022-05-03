@@ -12,18 +12,18 @@ public class FractionClock {
 	private static int hour_rand;
 	Random random;
 	
-	public static int[] getRandomized(int complexity) {
+	public  int[] getRandomized(int complexity_min, int complexity_max) {
 		Random random = new Random();
 		time = LocalTime.now();
 		
 		if(time.getMinute() != old_minute) {
-			min_rand = random.nextInt(complexity);
-			while(min_rand <= 0) min_rand = random.nextInt(complexity);
+			min_rand = random.nextInt(complexity_max);
+			while(min_rand <= complexity_min) min_rand = random.nextInt(complexity_max);
 		}
 		
 		if(time.getHour() != old_hour) {
-			hour_rand = random.nextInt(complexity);
-			while(hour_rand <= 0) hour_rand = random.nextInt(complexity);
+			hour_rand = random.nextInt(complexity_max);
+			while(hour_rand <= complexity_min) hour_rand = random.nextInt(complexity_max);
 		}
 		
 		old_hour = time.getHour();
@@ -32,16 +32,16 @@ public class FractionClock {
 		return new int[] {CalculateHours(time.getHour())[0] * hour_rand, CalculateHours(time.getHour())[1] * hour_rand, CalculateMinutes(time.getMinute())[0] * min_rand,CalculateMinutes(time.getMinute())[1] * min_rand};		
 	}
 	
-	public static int[] getHour() {
+	public  int[] getHour() {
 		time = LocalTime.now();
 		return new int[] {CalculateHours(time.getHour())[0],CalculateHours(time.getHour())[1]};
 	}
-	public static int[] getMinute() {
+	public  int[] getMinute() {
 		time = LocalTime.now();
 		return new int[] {CalculateMinutes(time.getMinute())[0],CalculateMinutes(time.getMinute())[1]};
 	}
 
-	private static int[] CalculateMinutes(int numerator) {
+	private  int[] CalculateMinutes(int numerator) {
 		if(numerator != 0) {
 		if(60 % numerator == 0) {
 			return new int[] {1,60/numerator};
@@ -67,7 +67,7 @@ public class FractionClock {
 	}
 		return new int[] {numerator, 60};
 	}
-	private static int[] CalculateHours(int numerator) {
+	private  int[] CalculateHours(int numerator) {
 		if(24 % numerator == 0) {
 			return new int[] {1,24/numerator};
 		}
